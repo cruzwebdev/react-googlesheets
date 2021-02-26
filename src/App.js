@@ -1,15 +1,11 @@
-// import logo from './logo.svg';
-import dotenv from 'dotenv';
 import axios from 'axios';
-import { Button, Form, Container, Header, TextArea } from 'semantic-ui-react'
+import { Button, Form, Container, Header } from 'semantic-ui-react'
 import './App.css';
 import React, { useState } from 'react';
 
-dotenv.config();
-
 function App() {
 
-  const [form, setForm] = useState({
+  const initialForm = {
     // date could be date applied or date updated if proceeding to upper stages
     date: '',
     // where I found the job add (mail, job site, ...)
@@ -28,7 +24,9 @@ function App() {
     contact: '',
     // any other relevant info
     notes: '',
-  })
+  }
+
+  const [form, setForm] = useState(initialForm);
 
   const handleChange = (event) => {
     const {value, name} = event.target;
@@ -37,8 +35,12 @@ function App() {
 
   const submitFormHandler = (event) => {
     event.preventDefault();
-    console.log(form);
-    // axios.post(process.env.SHEET, form);
+    axios.post(process.env.REACT_APP_SHEET, form)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(err => console.log(err))
+    .then(setForm(initialForm));
   }
 
   return (
